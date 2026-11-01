@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FPU Architecture | GonidonCloud Documentation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500&family=Roboto:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" type="image/png" href="logo.png" />
+  <script src="theme.js" defer></script>
+  <script src="search.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="logo" href="index.html">
+      <img src="logo.png" alt="GonidonCloud logo" class="logo-img" />
+      <span class="logo-company">GonidonCloud</span>
+      <span class="doc-tag">documentation</span>
+    </a>
+    <div class="search-wrap">
+      <span class="material-symbols-outlined">search</span>
+      <input id="doc-search" type="search" placeholder="Search documentation" autocomplete="off" aria-label="Search documentation" />
+      <div id="search-results" class="search-results"></div>
+    </div>
+    <nav class="main-nav">
+      <a href="index.html">Overview</a>
+      <a href="architecture.html" class="active">Architecture</a>
+      <a href="quickstart.html">Quickstart</a>
+      <a href="programming.html">Programming</a>
+      <a href="performance.html">Performance</a>
+      <a href="faq.html">FAQ</a>
+    </nav>
+    <!-- TODO: replace the href below with your GitHub repository URL -->
+    <a class="icon-btn github-btn" href="https://github.com/GonidonCloud/REPLACE_ME" target="_blank" rel="noopener" aria-label="GitHub repository" title="GitHub repository">
+      <svg class="github-icon" viewBox="0 0 16 16" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+    </a>
+    <button id="theme-toggle" class="icon-btn" aria-label="Switch theme">
+      <span class="material-symbols-outlined" id="theme-icon">dark_mode</span>
+    </button>
+  </header>
+
+  <main class="page">
+    <p class="breadcrumb">GonidonCloud Docs &gt; FPU &gt; Architecture</p>
+    <h1>FPU Architecture</h1>
+    <p class="subtitle">
+      How a Flow Processing Unit turns a pipeline description into continuously
+      flowing data.
+    </p>
+
+    <div class="toc">
+      <strong>On this page</strong>
+      <ol>
+        <li><a href="#topology">Chip topology</a></li>
+        <li><a href="#cores">Flow cores and stages</a></li>
+        <li><a href="#fabric">FlowFabric interconnect</a></li>
+        <li><a href="#memory">Flow memory hierarchy</a></li>
+        <li><a href="#backpressure">Backpressure and flow control</a></li>
+      </ol>
+    </div>
+
+    <h2 id="topology">Chip topology</h2>
+    <p>
+      An FPU chip is a two-dimensional mesh of <strong>flow cores</strong>. Each core is
+      an independent dataflow engine with its own stage array, flow queues, and
+      fabric router. Cores never share a program counter — there is nothing to share.
+      The host system sees the FPU through a standard PCIe Gen5 endpoint or a
+      native FlowFabric port, depending on the enclosure.
+    </p>
+    <pre><code>┌────────────────────────────────────────────┐
+│                  FPU die                   │
+│  ┌────────┐ ┌────────┐ ┌────────┐ ┌──────┐ │   FC  = flow core
+│  │  FC 0  │ │  FC 1  │ │  FC 2  │ │ FC 3 │ │   FF  = FlowFabric router
+│  │ stages │ │ stages │ │ stages │ │stages│ │   FM  = flow memory tile
+│  └───FF───┘ └───FF───┘ └───FF───┘ └──FF──┘ │
+│  ┌────────┐ ┌────────┐ ┌────────┐ ┌──────┐ │
+│  │  FC 4  │ │  FC 5  │ │  FC 6  │ │ FC 7 │ │
+│  └───FF───┘ └───FF───┘ └───FF───┘ └──FF──┘ │
+│           FlowFabric mesh + FM tiles       │
+│  ┌──────────────────────────────────────┐  │
+│  │   Host interface (PCIe5 / FlowLink)  │  │
+│  └──────────────────────────────────────┘  │
+└────────────────────────────────────────────┘</code></pre>
+
+    <h2 id="cores">Flow cores and stages</h2>
+    <p>
+      Each flow core contains up to <strong>256 reconfigurable stages</strong>. A stage is
+      the smallest unit of execution: a pipelined functional block that consumes
+      tokens from an input flow queue, applies a kernel, and emits tokens to one or
+      more output queues. Stages are grouped into <em>lanes</em>; a lane processes one
+      token stream in strict order, while lanes within a core run concurrently.
+    </p>
+    <p>Every stage has three binding parameters, fixed when the pipeline is placed:</p>
+    <table>
+      <thead>
+        <tr><th>Parameter</th><th>Description</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>KERNEL_ID</code></td><td>Index into the core's kernel ROM / reconfigurable kernel memory.</td></tr>
+        <tr><td><code>QDEPTH</code></td><td>Depth of the stage's input queue (2–512 tokens).</td></tr>
+        <tr><td><code>UPSTREAM[]</code></td><td>List of fabric channels feeding this stage.</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="fabric">FlowFabric interconnect</h2>
+    <p>
+      <strong>FlowFabric</strong> is the on-chip network that carries tokens between
+      stages, cores, and I/O ports. It is a credit-based, lossless network with
+      deterministic routing: once a pipeline is placed, the path of every flow is
+      known at compile time, which is what makes end-to-end latency on an FPU
+      predictable to the nanosecond.
+    </p>
+    <ul>
+      <li><strong>Per-hop latency:</strong> 18 ns (v2), including flow-control overhead.</li>
+      <li><strong>Bisection bandwidth:</strong> 3.2 Tbps on-chip (v2 die).</li>
+      <li><strong>External links:</strong> 4 × 400 Gbps FlowLink ports per device.</li>
+    </ul>
+
+    <h2 id="memory">Flow memory hierarchy</h2>
+    <p>
+      Unlike a cache-based processor, the FPU exposes managed memory explicitly:
+    </p>
+    <table>
+      <thead>
+        <tr><th>Level</th><th>Size (v2)</th><th>Latency</th><th>Scope</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Stage registers</td><td>64 KB / stage</td><td>1 cycle</td><td>Single stage</td></tr>
+        <tr><td>Flow memory tile</td><td>4 MB / tile</td><td>~9 cycles</td><td>Neighboring cores</td></tr>
+        <tr><td>Core scratchpad</td><td>32 MB / core</td><td>~35 cycles</td><td>One flow core</td></tr>
+        <tr><td>Device HBM</td><td>32 GB</td><td>~180 cycles</td><td>All cores</td></tr>
+      </tbody>
+    </table>
+    <p>
+      Flow memory tiles are the key to sustained throughput: state that would cause a
+      cache thrash on a CPU (routing tables, stream windows, feature stores) is
+      pinned into a tile and addressed by the stages that own it. There is no
+      coherence protocol to pay for, because ownership is static.
+    </p>
+
+    <div class="callout">
+      <span class="material-symbols-outlined callout-icon">info</span>
+      <div class="callout-body">
+        <div class="callout-title">Note</div>
+        Because ownership is static, the compiler rejects any pipeline where two
+        stages write to the same flow memory region. Use a
+        <code>reduce</code> stage to merge streams instead.
+      </div>
+    </div>
+
+    <h2 id="backpressure">Backpressure and flow control</h2>
+    <p>
+      The FPU is a push-based device: an upstream stage may only emit a token when it
+      holds a credit for the downstream queue. If a slow stage builds up, backpressure
+      propagates backward through the fabric to the source — the device never drops
+      or overwrites in-flight data. Correct pipelines therefore need to bound their
+      state: a stage that buffers an unbounded window will eventually stall its lane.
+    </p>
+    <pre><code>// A pipeline that cannot deadlock: window size is bounded.
+flow pkt_in  --&gt; window(4096) --> classify --&gt; sink(out_stream);</code></pre>
+
+    <h2 id="security">Security model</h2>
+    <p>
+      Pipelines are isolated at placement time. Each loaded pipeline gets a
+      <em>flow namespace</em>: a set of fabric channels, memory regions, and I/O
+      ports it may touch. The fabric router drops — and logs — any token that leaves
+      its namespace. Bitstreams are signed with GonidonCloud device keys, and the
+      host driver verifies signatures before placement.
+    </p>
+
+    <div class="pagination">
+      <a href="index.html">← Overview</a>
+      <a href="quickstart.html">Quickstart →</a>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <!-- TODO: replace the href below with your marketing site URL -->
+    <a class="footer-home" href="https://www.gonidon.cloud/REPLACE_ME">
+      <span class="material-symbols-outlined">home</span>Go to home
+    </a>
+    <div class="footer-line">
+      GonidonCloud FPU Documentation — © 2026 GonidonCloud. All rights reserved.
+    </div>
+  </footer>
+</body>
+</html>
