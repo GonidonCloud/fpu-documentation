@@ -1,92 +1,99 @@
-# GonidonCloud FPU — Documentation Site (site-only)
+# GonidonCloud FPU documentation
 
-Static documentation site for the **Flow Processing Unit (FPU)** — GonidonCloud's
-dataflow accelerator for high-throughput, pipelined stream processing.
+Documentation for **Flow Processing Units (FPUs)**, GonidonCloud's accelerator platform
+for compiled tensor programs, model training, and inference.
 
-Built with plain HTML/CSS/JS: no build step, no dependencies, no server script —
-just files you can host anywhere.
+The site has a Google Cloud-inspired documentation layout, a Node.js preview server, and
+no third-party runtime dependencies.
 
-## Running locally
+## Run with npm
 
-**Option 1 — any static file server** (recommended, needed for the search and
-fonts to behave consistently):
+Node.js 18 or newer is required.
 
 ```bash
-python3 -m http.server 8000        # http://localhost:8000
-npx serve .                        # or via Node
+npm install
+npm start
 ```
 
-**Option 2 — just open the file:** double-click `index.html`. The site works
-from a `file://` URL too (search box is hidden on narrow/file usage, everything
-else is identical).
+Open **http://localhost:3000**. If port 3000 is already occupied, the server selects a
+free port and prints its URL. To request a specific port or listen on all interfaces:
 
-## Pages
+```bash
+npm start -- --port 8080
+npm start -- --host 0.0.0.0 --port 8080
+```
 
-| File                 | Section                                             |
-| -------------------- | --------------------------------------------------- |
-| `index.html`         | Overview — what the FPU is, generations, roadmap    |
-| `architecture.html`  | Chip topology, FlowFabric, memory, flow control     |
-| `quickstart.html`    | Toolchain install, first pipeline, run & simulate   |
-| `programming.html`   | FlowLang, kernels (GDK-C), host runtime API         |
-| `performance.html`   | Metrics, profiling with `fputool stats`, tuning     |
-| `faq.html`           | Frequently asked questions                          |
+For automatic server restarts while editing `server.js`:
 
-## Features
+```bash
+npm run dev
+```
 
-- 🌗 **Light/dark theme switch** — persisted in `localStorage`, follows the OS
-  preference on first visit (`theme.js`).
-- 🔍 **Doc search** — header search with dropdown suggestions across all pages,
-  keyboard navigation (`↑`/`↓`/`Enter`), `/` to focus (`search.js`).
-- 🎨 **Material-inspired design** — Google Sans/Roboto + Material Symbols,
-  original CSS in `styles.css` (no external CSS frameworks).
-- 📱 **Responsive** — the header collapses gracefully on narrow screens.
-- 🔗 **Cross-page navigation** — breadcrumbs, prev/next pagination, anchors.
+Check all JavaScript files for syntax errors:
+
+```bash
+npm run check
+```
+
+## Documentation map
+
+| File | Contents |
+| --- | --- |
+| `index.html` | Platform overview, device family, and execution workflow |
+| `architecture.html` | Tensor engines, memory, numeric formats, FlowMesh, and isolation |
+| `quickstart.html` | Toolchain installation, device discovery, and first tensor program |
+| `programming.html` | FlowKit graphs, shapes, precision, sharding, model import, and debugging |
+| `performance.html` | Synchronized benchmarks, profiling, bottlenecks, and workgroup scaling |
+| `faq.html` | Compatibility, training, memory, deployment, and troubleshooting |
+
+## Interface
+
+- Three-column desktop layout with section navigation, article content, and a scrollspy
+  table of contents.
+- Search dialog opened with **Ctrl+K**, **Cmd+K**, or **/**, including arrow-key navigation.
+- Light and dark Material-style themes with saved and operating-system preferences.
+- Copy buttons on code blocks, reading progress, page feedback, and previous/next links.
+- Mobile navigation drawer, full-screen search, responsive tables, and print styles.
+- Roboto, Google Sans, and Roboto Mono loaded from Google Fonts; system fallbacks are used
+  when the fonts are unavailable.
 
 ## Project structure
 
-```
+```text
 ├── index.html          # Overview
 ├── architecture.html   # Architecture reference
 ├── quickstart.html     # Getting started
-├── programming.html    # FlowLang programming guide
-├── performance.html    # Performance & tuning
+├── programming.html    # FlowKit programming guide
+├── performance.html    # Performance guide
 ├── faq.html            # FAQ
-├── styles.css          # All styling (theme variables live here)
-├── theme.js            # Light/dark theme toggle
-├── search.js           # Client-side doc search
-├── logo.png            # GonidonCloud logo (header + favicon)
+├── styles.css          # Material-inspired theme and responsive layout
+├── app.js              # Shared shell, navigation, scrollspy, and page utilities
+├── search.js           # Search index and command-palette behavior
+├── theme.js            # Theme switcher
+├── server.js           # Dependency-free Node.js static server
+├── package.json        # npm commands and Node.js version requirement
+├── logo.png            # GonidonCloud logo
 └── README.md
 ```
 
-## Customization
+## Editing
 
-- **GitHub link** — in every `*.html` header, replace the `REPLACE_ME` placeholder
-  in the `github-btn` anchor:
-  ```html
-  <a class="icon-btn github-btn" href="https://github.com/YOUR_ORG/YOUR_REPO" ...>
-  ```
-- **"Go to home" footer link** — in every `*.html` footer, replace the
-  `REPLACE_ME` placeholder in the `footer-home` anchor with your marketing site URL.
-- **Colors & themes** — edit the CSS custom properties at the top of `styles.css`
-  (`:root` for light, `[data-theme="dark"]` for dark).
-- **Search index** — add or update entries in the `INDEX` array at the top of `search.js`.
+1. Edit the HTML pages directly. The shared shell in `app.js` builds the header, sidebars,
+   table of contents, feedback controls, and footer for every page.
+2. Add new sections to the `INDEX` array in `search.js`, including their anchor IDs.
+3. Add top-level pages to the `navigation` array in `app.js`.
+4. Keep commands, tensor formats, target names, and FlowKit examples consistent.
+5. Run `npm run check`, then verify search, code copying, both themes, and the mobile
+   navigation drawer.
 
-## Contributing
-
-1. Edit the HTML pages directly — plain markup, shared header/footer blocks.
-2. Keep new sections mirrored in the `search.js` INDEX so they are searchable.
-3. Test in both themes (toggle in the header) and at mobile widths.
+To configure project links, replace `REPLACE_ME` in `app.js` and the HTML source footers.
+Theme colors are CSS custom properties at the top of `styles.css`.
 
 ## Deployment
 
-Fully static — point GitHub Pages, Netlify, Cloudflare Pages or any web server
-at the repository root. No build step, no CI configuration needed.
-
-### GitHub Pages in two clicks
-
-1. Repository → **Settings → Pages**.
-2. Source: **Deploy from a branch**, branch `main`, folder `/ (root)`.
-3. Save — the site is live at `https://<org>.github.io/<repo>/`.
+The generated site is static and can be hosted on GitHub Pages, Netlify, Cloudflare Pages,
+or any conventional web server. No build command is required. `npm start` is intended for
+local preview, not as a production edge cache or CDN.
 
 ---
 

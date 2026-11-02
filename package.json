@@ -1,0 +1,14 @@
+{
+  "name": "gonidoncloud-fpu-docs",
+  "version": "1.0.0",
+  "private": true,
+  "description": "GonidonCloud Flow Processing Unit documentation site",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "check": "node --check server.js && node --check app.js && node --check search.js && node --check theme.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

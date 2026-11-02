@@ -3,154 +3,195 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FPU Performance | GonidonCloud Documentation</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500&family=Roboto:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet" />
+  <meta name="description" content="Measure and improve FPU performance with synchronized benchmarks, profiler reports, memory analysis, and multi-device tuning." />
+  <title>FPU performance | GonidonCloud Documentation</title>
   <link rel="stylesheet" href="styles.css" />
   <link rel="icon" type="image/png" href="logo.png" />
+  <script src="app.js" defer></script>
   <script src="theme.js" defer></script>
   <script src="search.js" defer></script>
 </head>
 <body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
   <header class="site-header">
-    <a class="logo" href="index.html">
-      <img src="logo.png" alt="GonidonCloud logo" class="logo-img" />
-      <span class="logo-company">GonidonCloud</span>
-      <span class="doc-tag">documentation</span>
-    </a>
-    <div class="search-wrap">
-      <span class="material-symbols-outlined">search</span>
-      <input id="doc-search" type="search" placeholder="Search documentation" autocomplete="off" aria-label="Search documentation" />
-      <div id="search-results" class="search-results"></div>
-    </div>
-    <nav class="main-nav">
-      <a href="index.html">Overview</a>
-      <a href="architecture.html">Architecture</a>
-      <a href="quickstart.html">Quickstart</a>
-      <a href="programming.html">Programming</a>
-      <a href="performance.html" class="active">Performance</a>
-      <a href="faq.html">FAQ</a>
-    </nav>
-    <!-- TODO: replace the href below with your GitHub repository URL -->
-    <a class="icon-btn github-btn" href="https://github.com/GonidonCloud/REPLACE_ME" target="_blank" rel="noopener" aria-label="GitHub repository" title="GitHub repository">
-      <svg class="github-icon" viewBox="0 0 16 16" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
-    </a>
-    <button id="theme-toggle" class="icon-btn" aria-label="Switch theme">
-      <span class="material-symbols-outlined" id="theme-icon">dark_mode</span>
-    </button>
+    <a class="logo" href="index.html" aria-label="GonidonCloud FPU documentation home"><img src="logo.png" alt="" class="logo-img" /><span class="logo-company">GonidonCloud</span><span class="doc-tag">FPU DOCS</span></a>
+    <div class="search-wrap"><svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m21 20-4.7-4.7m2.2-5.05a7.25 7.25 0 1 1-14.5 0 7.25 7.25 0 0 1 14.5 0Z"/></svg><input id="doc-search" type="search" placeholder="Search FPU docs" autocomplete="off" aria-label="Search documentation" aria-expanded="false" aria-controls="search-results" /><kbd>/</kbd><div id="search-results" class="search-results" aria-label="Search results"></div></div>
+    <nav class="main-nav" aria-label="Documentation sections"><a href="index.html">Overview</a><a href="architecture.html">Architecture</a><a href="quickstart.html">Quickstart</a><a href="programming.html">Programming</a><a href="performance.html" class="active" aria-current="page">Performance</a><a href="faq.html">FAQ</a></nav>
+    <a class="icon-btn github-btn" href="https://github.com/GonidonCloud/REPLACE_ME" target="_blank" rel="noopener" aria-label="GitHub repository" title="GitHub repository"><svg class="github-icon" viewBox="0 0 16 16" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg></a>
+    <button id="theme-toggle" class="icon-btn" aria-label="Switch theme" title="Switch theme"><span id="theme-icon" class="theme-icon" aria-hidden="true">◐</span></button>
   </header>
 
-  <main class="page">
-    <p class="breadcrumb">GonidonCloud Docs &gt; FPU &gt; Performance</p>
-    <h1>Performance and tuning</h1>
-    <p class="subtitle">
-      How to measure, profile, and tune FPU pipelines for maximum sustained
-      throughput.
-    </p>
+  <main id="main-content" class="page">
+    <p class="breadcrumb">Documentation <span>/</span> FPU <span>/</span> Performance</p>
+    <p class="eyebrow">MEASURE BEFORE OPTIMIZING</p>
+    <h1>Performance analysis</h1>
+    <p class="subtitle">Build a repeatable benchmark, identify the limiting resource, and change one variable at a time.</p>
 
-    <div class="toc">
+    <nav class="toc" aria-label="On this page">
       <strong>On this page</strong>
       <ol>
-        <li><a href="#measuring">Measuring performance</a></li>
-        <li><a href="#profiling">Profiling with fputool stats</a></li>
-        <li><a href="#bottlenecks">Common bottlenecks</a></li>
-        <li><a href="#tuning">Tuning checklist</a></li>
+        <li><a href="#benchmark">A reliable benchmark</a></li>
+        <li><a href="#metrics">Metrics that matter</a></li>
+        <li><a href="#profile">Profiler workflow</a></li>
+        <li><a href="#bottlenecks">Reading bottlenecks</a></li>
+        <li><a href="#distributed">Workgroup scaling</a></li>
+        <li><a href="#checklist">Optimization checklist</a></li>
       </ol>
-    </div>
+    </nav>
 
-    <h2 id="measuring">Measuring performance</h2>
-    <p>FPU performance is reported in three units:</p>
-    <table>
-      <thead>
-        <tr><th>Metric</th><th>Meaning</th><th>Tool</th></tr>
-      </thead>
-      <tbody>
-        <tr><td><code>Ttok/s</code></td><td>Tokens processed per second across the whole device.</td><td><code>fputool probe</code></td></tr>
-        <tr><td><code>Ms tok/s/lane</code></td><td>Per-lane token rate — use this to compare stages.</td><td><code>fputool stats</code></td></tr>
-        <tr><td>p99 flow latency</td><td>End-to-end latency from source to sink, 99th percentile.</td><td><code>fputool trace</code></td></tr>
-      </tbody>
-    </table>
+    <h2 id="benchmark">A reliable benchmark</h2>
     <p>
-      Always size benchmarks to run for at least 30 seconds. The FPU has almost no
-      warm-up cost — utilization is flat from the first token — but short runs exaggerate
-      I/O jitter from the host.
+      FPU launches are asynchronous. Timing only the Python call measures enqueue time, not
+      device execution. Warm up the executable, synchronize before starting the clock, run
+      enough iterations to smooth host jitter, and wait for the final result before stopping
+      it.
     </p>
+    <pre><code>import time
+import flowkit as fk
 
-    <h2 id="profiling">Profiling with fputool stats</h2>
-    <pre><code>fputool stats enrich.gbit --duration=30s</code></pre>
-    <pre><code>Stage         Core  Lane  Rate (Mtok/s)  QDepth util  Kernel time
-upper            0     1     312.4         14%         38 ns
-drop             1     0     312.4         71%  ◄      61 ns
-w(4096)          1     3     311.9           2%         12 ns
-count            2     0     300.1          88%  ◄     104 ns
+batch_size = 64
+warmup_iterations = 10
+measure_iterations = 100
 
-Flow summary: 301.8 Mtok/s sustained, 0 drops, p99 latency 1.14 µs</code></pre>
+for _ in range(warmup_iterations):
+    output = program(x, weights, bias)
+output.block_until_ready()
+
+start = time.perf_counter()
+for _ in range(measure_iterations):
+    output = program(x, weights, bias)
+output.block_until_ready()
+elapsed = time.perf_counter() - start
+
+samples_per_second = batch_size * measure_iterations / elapsed
+print(f"Throughput: {samples_per_second:.1f} samples/s")
+print(f"Mean step:  {elapsed / measure_iterations * 1000:.3f} ms")</code></pre>
     <p>
-      Stages marked ◄ are the pacing bottleneck — the rest of the pipeline can go no
-      faster than they do. The <code>QDepth util</code> column tells you whether a slow
-      stage is starving (low) or blocking its neighbors (high).
+      Keep inputs on device unless host transfer is part of the service path being measured.
+      Report batch shape, dtype, compiler version, target, power mode, and whether result
+      retrieval is included. Run the benchmark at least three times and retain the spread,
+      not just the best result.
     </p>
-
-    <h2 id="bottlenecks">Common bottlenecks</h2>
-    <h3>1. Kernel-bound stages</h3>
-    <p>
-      If kernel time dominates, split the kernel into two stages along its internal
-      pipeline boundary — the fabric hop is cheap (18 ns) compared to a deeper
-      combinational kernel.
-    </p>
-    <h3>2. Fan-in thundering herds</h3>
-    <p>
-      A <code>reduce</code> stage with many upstream channels serializes arriving
-      tokens. Insert a partial reduction per lane so each reducer channel receives
-      pre-merged data:
-    </p>
-    <pre><code>--&gt; tee {
-      branch 0 --&gt; reduce partial { kernel = "count64_lane" } --&gt; partials,
-      branch 1 --&gt; reduce partial { kernel = "count64_lane" } --&gt; partials,
-     }
---&gt; reduce count { kernel = "count64_merge" } --&gt; sink metrics;</code></pre>
-    <h3>3. Host-side pacing</h3>
-    <p>
-      Often the FPU isn't the bottleneck — the host feeding it is. Check
-      <code>fputool probe</code> while running: if utilizing below 90% and no stage
-      shows high queue utilization, look at your <code>feed.stream()</code> loop size
-      and DMA descriptor batching first.
-    </p>
-
-    <h2 id="tuning">Tuning checklist</h2>
-    <ul>
-      <li>☐ Set every <code>window</code> stage to the smallest size that fits your algorithm — queue memory is a shared resource.</li>
-      <li>☐ Batch DMA descriptors to at least 8 KB per transfer.</li>
-      <li>☐ Pin the critical path to cores with a short hop path (see <code>fputool visualize</code>).</li>
-      <li>☐ Persuade the placer to co-locate fan-out stages with their consumers: <code>place near</code> constraints.</li>
-      <li>☐ Re-run <code>fputool build</code> after every change and diff the closure report — placement is not incremental.</li>
-    </ul>
-
     <div class="callout warning">
-      <span class="material-symbols-outlined callout-icon">warning</span>
-      <div class="callout-body">
-        <div class="callout-title">Warning</div>
-        Over-constrained placements can leave fabric channels idle and reduce peak
-        throughput. Only pin the stages on your measured critical path.
-      </div>
+      <div class="callout-marker" aria-hidden="true">!</div>
+      <div class="callout-body"><div class="callout-title">The simulator is not a benchmark target</div>
+      <code>fpu-sim</code> validates functionality. Its execution time reflects the host CPU
+      running the simulation and has no predictive relationship with FPU throughput.</div>
     </div>
 
-    <div class="pagination">
-      <a href="programming.html">← Programming</a>
-      <a href="faq.html">FAQ →</a>
+    <h2 id="metrics">Metrics that matter</h2>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>Metric</th><th>Question answered</th><th>Primary source</th></tr></thead>
+        <tbody>
+          <tr><td>Samples or tokens per second</td><td>How much useful work completes?</td><td>Application benchmark</td></tr>
+          <tr><td>End-to-end latency percentiles</td><td>What response time do users experience?</td><td>Service instrumentation</td></tr>
+          <tr><td>Tensor-engine occupancy</td><td>How much of the device interval performs matrix work?</td><td>FPU profiler</td></tr>
+          <tr><td>HBM bandwidth and SRAM traffic</td><td>Is operand movement limiting compute?</td><td>FPU profiler</td></tr>
+          <tr><td>Host idle and queue wait</td><td>Is the device waiting for launch or input?</td><td>Runtime timeline</td></tr>
+          <tr><td>Collective time</td><td>How much multi-device time is spent exchanging data?</td><td>Workgroup timeline</td></tr>
+        </tbody>
+      </table>
     </div>
+    <p>
+      Throughput and latency are separate objectives. Larger batches can improve tensor
+      efficiency while worsening queueing delay. Set a service-level latency limit first,
+      then optimize throughput within that limit.
+    </p>
+    <h3>Arithmetic intensity</h3>
+    <p>
+      Arithmetic intensity is the number of arithmetic operations divided by bytes moved
+      from memory. Low-intensity operations such as standalone casts and elementwise chains
+      are often limited by bandwidth. Fusion can remove intermediate transfers and increase
+      useful work per byte. Dense matrix operations generally offer more opportunity to
+      keep the matrix array occupied, provided their tiles fit local memory well.
+    </p>
+
+    <h2 id="profile">Profiler workflow</h2>
+    <p>Capture a bounded region rather than an entire training job:</p>
+    <pre><code>fputool profile \
+  --output ./profiles/linear-relu \
+  --steps 100:200 \
+  python train.py</code></pre>
+    <p>Generate a text summary and inspect the timeline:</p>
+    <pre><code>fputool report ./profiles/linear-relu
+fputool timeline ./profiles/linear-relu --output timeline.html</code></pre>
+    <p>A summary highlights the dominant activities for the captured interval:</p>
+    <pre><code>Interval                    3.842 s (100 steps)
+Tensor engine busy          71.8%
+Vector engine busy          44.1%
+HBM read / write            2.41 / 1.26 TB/s
+Host queue wait              8.7%
+FlowMesh collective         12.4%
+
+Largest device operations
+  matmul[64,768]x[768,3072]   38.6%   fused: bias_add, relu
+  layer_norm                  11.2%   HBM-bound
+  all_sum gradients           12.4%   workgroup axis: data</code></pre>
+    <p>
+      Percentages for different engines can overlap because they execute concurrently.
+      Use the timeline to distinguish serial dependencies from simultaneous activity.
+    </p>
+
+    <h2 id="bottlenecks">Reading bottlenecks</h2>
+    <h3>Low compute occupancy with high memory traffic</h3>
+    <ul>
+      <li>Fuse compatible elementwise operations into their producer or consumer.</li>
+      <li>Use a narrower storage dtype after validating accuracy.</li>
+      <li>Increase batch or tile dimensions so each transferred operand supports more math.</li>
+      <li>Keep weights and activations on device between program invocations.</li>
+    </ul>
+    <h3>High compute occupancy but poor application throughput</h3>
+    <ul>
+      <li>Check for excessive host-to-device copies included in the application step.</li>
+      <li>Look for shape changes that trigger additional compilations.</li>
+      <li>Verify that matrix dimensions map efficiently to tiles; test nearby dimensions.</li>
+      <li>Confirm that the profiler region and application benchmark measure the same work.</li>
+    </ul>
+    <h3>Device idle gaps</h3>
+    <ul>
+      <li>Prefetch and preprocess the next batch while the current program executes.</li>
+      <li>Reuse compiled executables instead of compiling inside the serving loop.</li>
+      <li>Batch small requests within the allowed latency budget.</li>
+      <li>Move application logging and result serialization out of the critical path.</li>
+    </ul>
+    <h3>HBM capacity pressure</h3>
+    <p>
+      Read <code>program.resource_report</code> to identify live tensors at the peak. Reduce
+      activation lifetime through rematerialization, shard parameters or optimizer state,
+      or use pipeline stages. Increasing SRAM requests without reducing live HBM values does
+      not solve an HBM capacity problem.
+    </p>
+
+    <h2 id="distributed">Workgroup scaling</h2>
+    <p>
+      Compare throughput per device as the workgroup grows. A collective that runs after
+      every small layer can dominate an otherwise efficient data-parallel step. Increase
+      local work, overlap independent reductions with compute, and place communicating
+      partitions on nearby links.
+    </p>
+    <pre><code># Efficiency relative to a measured one-device baseline
+scaling_efficiency = workgroup_throughput / (baseline_throughput * device_count)</code></pre>
+    <p>
+      Measure the slowest device, not only the aggregate. A collective completes at the pace
+      of its slowest participant, so host preprocessing jitter or a degraded FlowMesh link
+      can appear as workgroup-wide idle time. Use <code>fputool links</code> to check link
+      health before changing model partitioning.
+    </p>
+
+    <h2 id="checklist">Optimization checklist</h2>
+    <ol class="steps">
+      <li><strong>Freeze correctness.</strong> Keep a reference output and accuracy check for every precision or graph change.</li>
+      <li><strong>Stabilize inputs.</strong> Use fixed shape buckets, preloaded parameters, and a warmed executable.</li>
+      <li><strong>Synchronize measurement.</strong> Separate host time, device time, transfers, and end-to-end service time.</li>
+      <li><strong>Address the largest item.</strong> Change the operation or transfer that dominates the captured interval.</li>
+      <li><strong>Recheck the profile.</strong> A new bottleneck can appear after the original one is removed.</li>
+      <li><strong>Validate under load.</strong> Test production request concurrency and multi-device health before rollout.</li>
+    </ol>
+
+    <div class="pagination"><a href="programming.html">← Programming</a><a href="faq.html">FAQ →</a></div>
   </main>
 
-  <footer class="site-footer">
-    <!-- TODO: replace the href below with your marketing site URL -->
-    <a class="footer-home" href="https://www.gonidon.cloud/REPLACE_ME">
-      <span class="material-symbols-outlined">home</span>Go to home
-    </a>
-    <div class="footer-line">
-      GonidonCloud FPU Documentation — © 2026 GonidonCloud. All rights reserved.
-    </div>
-  </footer>
+  <footer class="site-footer"><a class="footer-home" href="https://www.gonidon.cloud/REPLACE_ME">GonidonCloud home <span aria-hidden="true">↗</span></a><div class="footer-line">FPU Documentation · © 2026 GonidonCloud. All rights reserved.</div></footer>
 </body>
 </html>

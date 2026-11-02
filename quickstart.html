@@ -3,154 +3,177 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FPU Quickstart | GonidonCloud Documentation</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500&family=Roboto:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet" />
+  <meta name="description" content="Install the FPU toolchain, discover devices, and run a compiled tensor program with FlowKit." />
+  <title>FPU quickstart | GonidonCloud Documentation</title>
   <link rel="stylesheet" href="styles.css" />
   <link rel="icon" type="image/png" href="logo.png" />
+  <script src="app.js" defer></script>
   <script src="theme.js" defer></script>
   <script src="search.js" defer></script>
 </head>
 <body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
   <header class="site-header">
-    <a class="logo" href="index.html">
-      <img src="logo.png" alt="GonidonCloud logo" class="logo-img" />
-      <span class="logo-company">GonidonCloud</span>
-      <span class="doc-tag">documentation</span>
-    </a>
+    <a class="logo" href="index.html" aria-label="GonidonCloud FPU documentation home"><img src="logo.png" alt="" class="logo-img" /><span class="logo-company">GonidonCloud</span><span class="doc-tag">FPU DOCS</span></a>
     <div class="search-wrap">
-      <span class="material-symbols-outlined">search</span>
-      <input id="doc-search" type="search" placeholder="Search documentation" autocomplete="off" aria-label="Search documentation" />
-      <div id="search-results" class="search-results"></div>
+      <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m21 20-4.7-4.7m2.2-5.05a7.25 7.25 0 1 1-14.5 0 7.25 7.25 0 0 1 14.5 0Z"/></svg>
+      <input id="doc-search" type="search" placeholder="Search FPU docs" autocomplete="off" aria-label="Search documentation" aria-expanded="false" aria-controls="search-results" /><kbd>/</kbd><div id="search-results" class="search-results" aria-label="Search results"></div>
     </div>
-    <nav class="main-nav">
-      <a href="index.html">Overview</a>
-      <a href="architecture.html">Architecture</a>
-      <a href="quickstart.html" class="active">Quickstart</a>
-      <a href="programming.html">Programming</a>
-      <a href="performance.html">Performance</a>
-      <a href="faq.html">FAQ</a>
-    </nav>
-    <!-- TODO: replace the href below with your GitHub repository URL -->
-    <a class="icon-btn github-btn" href="https://github.com/GonidonCloud/REPLACE_ME" target="_blank" rel="noopener" aria-label="GitHub repository" title="GitHub repository">
-      <svg class="github-icon" viewBox="0 0 16 16" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
-    </a>
-    <button id="theme-toggle" class="icon-btn" aria-label="Switch theme">
-      <span class="material-symbols-outlined" id="theme-icon">dark_mode</span>
-    </button>
+    <nav class="main-nav" aria-label="Documentation sections"><a href="index.html">Overview</a><a href="architecture.html">Architecture</a><a href="quickstart.html" class="active" aria-current="page">Quickstart</a><a href="programming.html">Programming</a><a href="performance.html">Performance</a><a href="faq.html">FAQ</a></nav>
+    <a class="icon-btn github-btn" href="https://github.com/GonidonCloud/REPLACE_ME" target="_blank" rel="noopener" aria-label="GitHub repository" title="GitHub repository"><svg class="github-icon" viewBox="0 0 16 16" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg></a>
+    <button id="theme-toggle" class="icon-btn" aria-label="Switch theme" title="Switch theme"><span id="theme-icon" class="theme-icon" aria-hidden="true">◐</span></button>
   </header>
 
-  <main class="page">
-    <p class="breadcrumb">GonidonCloud Docs &gt; FPU &gt; Quickstart</p>
-    <h1>Quickstart: your first pipeline</h1>
-    <p class="subtitle">
-      Go from an empty workstation to a running FPU pipeline in about ten minutes.
-    </p>
+  <main id="main-content" class="page">
+    <p class="breadcrumb">Documentation <span>/</span> FPU <span>/</span> Quickstart</p>
+    <p class="eyebrow">FIRST PROGRAM</p>
+    <h1>Run a tensor program</h1>
+    <p class="subtitle">Install FlowKit, verify your FPU target, and execute a compiled operation on hardware or the simulator.</p>
 
-    <div class="toc">
+    <nav class="toc" aria-label="On this page">
       <strong>On this page</strong>
       <ol>
-        <li><a href="#prereqs">Before you begin</a></li>
+        <li><a href="#prerequisites">Prerequisites</a></li>
         <li><a href="#install">Install the toolchain</a></li>
-        <li><a href="#verify">Verify the device</a></li>
-        <li><a href="#pipeline">Write a pipeline</a></li>
-        <li><a href="#run">Place and run</a></li>
+        <li><a href="#discover">Discover a target</a></li>
+        <li><a href="#program">Compile and run</a></li>
+        <li><a href="#save">Save and reload a binary</a></li>
+        <li><a href="#troubleshooting">Troubleshooting</a></li>
       </ol>
-    </div>
+    </nav>
 
-    <h2 id="prereqs">Before you begin</h2>
+    <h2 id="prerequisites">Prerequisites</h2>
     <ul>
-      <li>A Linux host (Ubuntu 22.04+ or RHEL 9) with an FPU device installed, or access to a GonidonCloud FPU VM.</li>
-      <li>Python 3.10 or later.</li>
-      <li>The <code>gonidon</code> repository access token (provided in your GonidonCloud console).</li>
+      <li>Linux on an x86-64 or Arm64 host.</li>
+      <li>Python 3.10 or newer and <code>pip</code>.</li>
+      <li>Access to the GonidonCloud FPU package repository.</li>
+      <li>An FPU device with its host driver installed, or no hardware if you use the simulator.</li>
     </ul>
-
-    <div class="callout">
-      <span class="material-symbols-outlined callout-icon">info</span>
-      <div class="callout-body">
-        <div class="callout-title">Note</div>
-        No hardware yet? The toolchain includes <code>fpu-sim</code>, a cycle-accurate
-        simulator that runs every example on this site on your CPU.
-      </div>
-    </div>
-
-    <h2 id="install">Install the toolchain</h2>
-    <pre><code>curl -fsSL https://get.gonidon.cloud/fputool | sh
-
-# Adds the fputool binary to ~/.gonidon/bin
-export PATH="$PATH:$HOME/.gonidon/bin"</code></pre>
-    <p>This installs:</p>
-    <ul>
-      <li><code>fputool</code> — compile, place, and inspect pipelines.</li>
-      <li><code>fpu-sim</code> — cycle-accurate device simulator.</li>
-      <li><code>flangd</code> — the FlowLang language server.</li>
-    </ul>
-
-    <h2 id="verify">Verify the device</h2>
-    <pre><code>fputool probe</code></pre>
-    <p>On a host with an FPU v2 device attached you should see:</p>
-    <pre><code>Device 0: FPU v2 "Tisza"       [OK]
-  Flow cores:  32 / 32 healthy
-  HBM:         32 GB (26% reserved by host service)
-  FlowLink:    4 ports up (400 Gbps each)
-  Temperature: 41 °C — nominal</code></pre>
-
-    <h2 id="pipeline">Write a pipeline</h2>
-    <p>Create <code>hello.flow</code>:</p>
-    <pre><code>// hello.flow — uppercase a stream and count tokens
-source stdin
-  --&gt; map upper            { kernel = "utf8_upper" }
-  --&gt; tee {
-        branch 0 --&gt; sink stdout,
-        branch 1 --&gt; reduce count { kernel = "count64" }
-                      --&gt; sink metrics
-      };</code></pre>
     <p>
-      This declares three stages — a <code>map</code>, a fan-out <code>tee</code>, and a
-      <code>reduce</code> — wired in a static graph. No scheduler, no threads.
+      The examples use only FlowKit and NumPy. They do not require a separate machine
+      learning framework.
     </p>
 
-    <h2 id="run">Compile and run</h2>
-    <pre><code>fputool build hello.flow --target=sim    # for fpu-sim
-fputool build hello.flow --target=v2     # for real silicon
+    <h2 id="install">Install the toolchain</h2>
+    <p>Create an isolated Python environment:</p>
+    <pre><code>python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install flowkit flowkit-tools numpy</code></pre>
+    <p>The packages provide the following components:</p>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>Component</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr><td><code>flowkit</code></td><td>Python API for tensor construction, compilation, and execution.</td></tr>
+          <tr><td><code>flowc</code></td><td>Standalone compiler and FlowModel importer.</td></tr>
+          <tr><td><code>fputool</code></td><td>Device discovery, diagnostics, and profiling.</td></tr>
+          <tr><td><code>fpu-sim</code></td><td>Functional simulator selected with <code>FLOW_TARGET=sim</code>.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Confirm that the compiler and runtime versions match:</p>
+    <pre><code>flowc --version
+fputool version</code></pre>
 
-fputool run hello.flow</code></pre>
-    <p>Type into the terminal and watch the transformed text echo back. Press
-    <code>Ctrl+C</code> to end the stream; the metrics sink prints the final count.</p>
+    <h2 id="discover">Discover a target</h2>
+    <pre><code>fputool status</code></pre>
+    <p>An M2 host reports output similar to this:</p>
+    <pre><code>DEVICE  TARGET   DRIVER   HEALTH   CLUSTERS   HBM AVAILABLE
+0       fpu-m2   2.4.1    OK       4          91.6 GiB
 
+FlowMesh: 4 links up · workgroup membership: local
+Runtime:  2.4.1 · default device: 0</code></pre>
+    <div class="callout">
+      <div class="callout-marker" aria-hidden="true">i</div>
+      <div class="callout-body"><div class="callout-title">No device required</div>
+      Set <code>FLOW_TARGET=sim</code> to run the same example on the functional simulator.
+      The simulator checks numerical behavior and shapes, but it must not be used for
+      performance estimates.</div>
+    </div>
+
+    <h2 id="program">Compile and run</h2>
+    <p>Create a file named <code>vector_add.py</code>:</p>
+    <pre><code>import numpy as np
+import flowkit as fk
+
+# Python values describe the computation captured by the compiler.
+def add_tensors(x, y):
+    return fk.add(x, y)
+
+spec = fk.TensorSpec(shape=(1024, 1024), dtype="float32")
+program = fk.compile(add_tensors, x=spec, y=spec)
+
+rng = np.random.default_rng(42)
+x_host = rng.standard_normal((1024, 1024), dtype=np.float32)
+y_host = rng.standard_normal((1024, 1024), dtype=np.float32)
+
+x_device = fk.to_device(x_host)
+y_device = fk.to_device(y_host)
+result_device = program(x_device, y_device)
+result_host = fk.from_device(result_device)
+
+np.testing.assert_allclose(result_host, x_host + y_host, rtol=1e-6)
+print(f"Target: {fk.current_target()}")
+print(f"Output: {result_host.shape}, {result_host.dtype}")
+print("Result matches NumPy")</code></pre>
+    <p>
+      <code>fk.compile</code> captures the operation and produces an executable for the
+      current target. <code>fk.to_device</code> allocates device memory and copies each
+      input. <code>fk.from_device</code> waits for pending work and retrieves the result.
+    </p>
+    <p>Run on the default FPU:</p>
+    <pre><code>python vector_add.py</code></pre>
+    <p>Or select the simulator:</p>
+    <pre><code>FLOW_TARGET=sim python vector_add.py</code></pre>
+    <p>Expected final line:</p>
+    <pre><code>Result matches NumPy</code></pre>
     <div class="callout warning">
-      <span class="material-symbols-outlined callout-icon">warning</span>
-      <div class="callout-body">
-        <div class="callout-title">Warning</div>
-        Running against real hardware requires a signed bitstream. Development
-        builds work on <code>fpu-sim</code> and, with an unlocked device, on
-        engineering samples only.
-      </div>
+      <div class="callout-marker" aria-hidden="true">!</div>
+      <div class="callout-body"><div class="callout-title">Device calls are asynchronous</div>
+      Compilation is synchronous, but program launches are not. Use
+      <code>result_device.block_until_ready()</code> when measuring execution time without
+      copying the result to the host.</div>
     </div>
 
-    <h2>What's next</h2>
-    <ul>
-      <li>Learn the full <a href="programming.html">FlowLang programming model</a>.</li>
-      <li>See how to <a href="performance.html">profile and tune throughput</a>.</li>
-      <li>Read the <a href="architecture.html">architecture reference</a> to understand what the placer does with your graph.</li>
-    </ul>
+    <h2 id="save">Save and reload a binary</h2>
+    <p>
+      Save a compiled executable when you want deployment to skip compilation. Add these
+      lines to the example after <code>program</code> is created:
+    </p>
+    <pre><code>program.save("vector_add.flb")
+restored = fk.load("vector_add.flb")
+result_device = restored(x_device, y_device)</code></pre>
+    <p>
+      A Flow binary records its target, input specifications, and output specifications.
+      The runtime rejects incompatible arguments before launching the program. Binaries
+      are not portable between different FPU targets; retain the source and compile once
+      per target.
+    </p>
 
-    <div class="pagination">
-      <a href="architecture.html">← Architecture</a>
-      <a href="programming.html">Programming →</a>
+    <h2 id="troubleshooting">Troubleshooting</h2>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>Symptom</th><th>What to check</th></tr></thead>
+        <tbody>
+          <tr><td><code>No FPU target found</code></td><td>Run <code>fputool status</code>, verify driver permissions, or set <code>FLOW_TARGET=sim</code>.</td></tr>
+          <tr><td><code>Shape mismatch</code></td><td>Compare input shapes and dtypes with the <code>TensorSpec</code> used at compile time.</td></tr>
+          <tr><td><code>Target mismatch</code></td><td>Recompile the program for the target reported by <code>fputool status</code>.</td></tr>
+          <tr><td><code>HBM allocation failed</code></td><td>Release unused device arrays and inspect allocations with <code>fputool memory</code>.</td></tr>
+        </tbody>
+      </table>
     </div>
+    <p>
+      For a diagnostic bundle, run <code>fputool doctor --output fpu-diagnostics.tar.gz</code>.
+      Review the bundle before attaching it to a support request.
+    </p>
+
+    <div class="pagination"><a href="architecture.html">← Architecture</a><a href="programming.html">Programming →</a></div>
   </main>
 
   <footer class="site-footer">
-    <!-- TODO: replace the href below with your marketing site URL -->
-    <a class="footer-home" href="https://www.gonidon.cloud/REPLACE_ME">
-      <span class="material-symbols-outlined">home</span>Go to home
-    </a>
-    <div class="footer-line">
-      GonidonCloud FPU Documentation — © 2026 GonidonCloud. All rights reserved.
-    </div>
+    <a class="footer-home" href="https://www.gonidon.cloud/REPLACE_ME">GonidonCloud home <span aria-hidden="true">↗</span></a>
+    <div class="footer-line">FPU Documentation · © 2026 GonidonCloud. All rights reserved.</div>
   </footer>
 </body>
 </html>

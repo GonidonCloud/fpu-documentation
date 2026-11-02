@@ -3,123 +3,103 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Answers to common questions about Flow Processing Units, FlowKit, training, inference, compatibility, and debugging." />
   <title>FPU FAQ | GonidonCloud Documentation</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500&family=Roboto:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
   <link rel="icon" type="image/png" href="logo.png" />
+  <script src="app.js" defer></script>
   <script src="theme.js" defer></script>
   <script src="search.js" defer></script>
 </head>
 <body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
   <header class="site-header">
-    <a class="logo" href="index.html">
-      <img src="logo.png" alt="GonidonCloud logo" class="logo-img" />
-      <span class="logo-company">GonidonCloud</span>
-      <span class="doc-tag">documentation</span>
-    </a>
-    <div class="search-wrap">
-      <span class="material-symbols-outlined">search</span>
-      <input id="doc-search" type="search" placeholder="Search documentation" autocomplete="off" aria-label="Search documentation" />
-      <div id="search-results" class="search-results"></div>
-    </div>
-    <nav class="main-nav">
-      <a href="index.html">Overview</a>
-      <a href="architecture.html">Architecture</a>
-      <a href="quickstart.html">Quickstart</a>
-      <a href="programming.html">Programming</a>
-      <a href="performance.html">Performance</a>
-      <a href="faq.html" class="active">FAQ</a>
-    </nav>
-    <!-- TODO: replace the href below with your GitHub repository URL -->
-    <a class="icon-btn github-btn" href="https://github.com/GonidonCloud/REPLACE_ME" target="_blank" rel="noopener" aria-label="GitHub repository" title="GitHub repository">
-      <svg class="github-icon" viewBox="0 0 16 16" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
-    </a>
-    <button id="theme-toggle" class="icon-btn" aria-label="Switch theme">
-      <span class="material-symbols-outlined" id="theme-icon">dark_mode</span>
-    </button>
+    <a class="logo" href="index.html" aria-label="GonidonCloud FPU documentation home"><img src="logo.png" alt="" class="logo-img" /><span class="logo-company">GonidonCloud</span><span class="doc-tag">FPU DOCS</span></a>
+    <div class="search-wrap"><svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m21 20-4.7-4.7m2.2-5.05a7.25 7.25 0 1 1-14.5 0 7.25 7.25 0 0 1 14.5 0Z"/></svg><input id="doc-search" type="search" placeholder="Search FPU docs" autocomplete="off" aria-label="Search documentation" aria-expanded="false" aria-controls="search-results" /><kbd>/</kbd><div id="search-results" class="search-results" aria-label="Search results"></div></div>
+    <nav class="main-nav" aria-label="Documentation sections"><a href="index.html">Overview</a><a href="architecture.html">Architecture</a><a href="quickstart.html">Quickstart</a><a href="programming.html">Programming</a><a href="performance.html">Performance</a><a href="faq.html" class="active" aria-current="page">FAQ</a></nav>
+    <a class="icon-btn github-btn" href="https://github.com/GonidonCloud/REPLACE_ME" target="_blank" rel="noopener" aria-label="GitHub repository" title="GitHub repository"><svg class="github-icon" viewBox="0 0 16 16" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg></a>
+    <button id="theme-toggle" class="icon-btn" aria-label="Switch theme" title="Switch theme"><span id="theme-icon" class="theme-icon" aria-hidden="true">◐</span></button>
   </header>
 
-  <main class="page">
-    <p class="breadcrumb">GonidonCloud Docs &gt; FPU &gt; FAQ</p>
-    <h1>Frequently asked questions</h1>
-    <p class="subtitle">Short answers to the questions we hear most about the FPU.</p>
+  <main id="main-content" class="page">
+    <p class="breadcrumb">Documentation <span>/</span> FPU <span>/</span> FAQ</p>
+    <p class="eyebrow">COMMON QUESTIONS</p>
+    <h1>FPU FAQ</h1>
+    <p class="subtitle">Compatibility, programming, deployment, and troubleshooting in one place.</p>
 
-    <h3>Is an FPU a GPU?</h3>
-    <p>
-      No. A GPU executes programs over large batches of data with heavy
-      synchronization. An FPU never batches: tokens flow through a statically placed
-      pipeline and results emerge continuously. The FPU is faster when your workload
-      is a stable pipeline; the GPU is faster when it is a large one-shot computation.
-    </p>
+    <section class="faq-item" id="name">
+      <h2>What does FPU stand for?</h2>
+      <p><strong>Flow Processing Unit.</strong> “Flow” describes the compiler-managed movement of tensor tiles between memory and compute resources. It does not mean floating-point unit, although FPUs support floating-point tensor formats.</p>
+    </section>
 
-    <h3>Can the FPU do general-purpose computing?</h3>
-    <p>
-      It does not replace a CPU. FlowLang has no recursion, no dynamic memory
-      allocation, and no unbounded loops — by design. Control flow is limited to
-      bounded conditionals inside kernels. Anything irregular belongs on the host.
-    </p>
+    <section class="faq-item" id="gpu">
+      <h2>Is an FPU a GPU?</h2>
+      <p>No. Both can accelerate parallel numerical work, but an FPU is designed around compiled tensor graphs, explicitly scheduled on-chip memory, and multi-device collectives. A system can include both: for example, a GPU can render or preprocess media while an FPU executes a trained model.</p>
+    </section>
 
-    <h3>Does FPU support floating point?</h3>
-    <p>
-      Yes. Standard kernels include IEEE 754 single- and double-precision math, plus
-      bf16 and fixed-point formats typical for signal processing and ML feature work.
-    </p>
+    <section class="faq-item" id="frameworks">
+      <h2>Which model formats and frameworks are supported?</h2>
+      <p>FlowKit programs can be written directly in Python. The standalone compiler also imports supported ONNX operators into the portable FlowModel format. Framework exporters produce <code>.flm</code> packages without changing the runtime API. Run <code>flowc operators model.flm --unsupported</code> to check a particular model before compiling it.</p>
+    </section>
 
-    <h3>What happens to in-flight tokens when I stop a pipeline?</h3>
-    <p>
-      <code>pipeline.stop()</code> drains gracefully: sources stop emitting, fabric
-      queues empty, and sinks flush before the bitstream is unloaded. Nothing in
-      flight is lost. To abort immediately, use <code>pipeline.abort()</code>, which
-      resets all queues.
-    </p>
+    <section class="faq-item" id="training">
+      <h2>Can FPUs train models as well as serve them?</h2>
+      <p>Yes. E1 is intended primarily for inference, while M2 and M4 support training and inference. FlowKit provides differentiation for captured graphs, and multi-device meshes support gradient collectives. Memory capacity must include parameters, gradients, activations, and optimizer state—not just model weights.</p>
+    </section>
 
-    <h3>How do I run multiple pipelines on one device?</h3>
-    <p>
-      The placer partitions cores and fabric channels between pipelines, and each
-      gets an isolated flow namespace. All pipelines share HBM capacity, so budget
-      your window and scratchpad usage across them. You can also chain devices over
-      FlowLink for larger topologies.
-    </p>
+    <section class="faq-item" id="dynamic-shapes">
+      <h2>How do variable batch sizes and sequence lengths work?</h2>
+      <p>Compile a bounded collection of static-shape executables, pad inputs to the nearest supported shape, and mask padded values where they could affect a result. This makes memory use predictable and avoids compilation in a serving loop. See <a href="programming.html#shapes">Shapes and layouts</a> for an example.</p>
+    </section>
 
-    <h3>Is the simulator accurate?</h3>
-    <p>
-      <code>fpu-sim</code> is cycle-accurate for fabric, queues, and standard kernels;
-      timing for custom GDK-C kernels is within 5% of measured silicon. Throughput
-      margins caused by host I/O differ, so re-benchmark on hardware before capacity
-      planning.
-    </p>
+    <section class="faq-item" id="precision">
+      <h2>Will bfloat16 or int8 change model accuracy?</h2>
+      <p>It can. Lower-precision storage changes rounding and, for integer formats, introduces quantization error. FPU matrix operations can accumulate bfloat16 inputs in float32, but that does not make the result identical to a full float32 graph. Evaluate the final task metric using representative data and production quantization parameters.</p>
+    </section>
 
-    <h3>What does the "FPU" name stand for here?</h3>
-    <p>
-      <strong>Flow Processing Unit.</strong> The historical meaning — floating-point
-      unit — was a nice coincidence: our first silicon also did a lot of floating
-      point, just as part of the flow.
-    </p>
+    <section class="faq-item" id="memory">
+      <h2>Why does a model fit in HBM but fail to compile?</h2>
+      <p>HBM capacity is only one constraint. A tile schedule must also fit cluster SRAM, engine registers, command buffers, and communication resources. Inspect <code>program.resource_report</code> or the compiler diagnostics to identify the exhausted level. Changing tile size, activation lifetime, or partitioning can help even when total HBM use remains similar.</p>
+    </section>
 
-    <h3>Where can I get help?</h3>
-    <ul>
-      <li>Community forum: <code>forum.gonidon.cloud/fpu</code></li>
-      <li>Support portal for enterprise customers</li>
-      <li><code>fputool doctor</code> collects diagnostics for support tickets</li>
-    </ul>
+    <section class="faq-item" id="sharing">
+      <h2>Can several applications share one FPU?</h2>
+      <p>Yes, when the device policy enables multiple runtime contexts. Each context receives isolated queues and memory allocations. Compute is time-sliced or assigned reserved clusters according to that policy. Sharing does not guarantee unchanged latency, so validate co-located workloads under realistic load.</p>
+    </section>
 
-    <div class="pagination">
-      <a href="performance.html">← Performance</a>
-      <a href="index.html">Overview →</a>
-    </div>
+    <section class="faq-item" id="simulator">
+      <h2>Is the simulator useful for performance testing?</h2>
+      <p>No. <code>fpu-sim</code> is a functional target for checking shapes, numerical behavior, and application integration on a CPU. It does not model device timing. Use physical hardware and synchronized benchmarks for all capacity and latency decisions.</p>
+    </section>
+
+    <section class="faq-item" id="determinism">
+      <h2>Are FPU results deterministic?</h2>
+      <p>A fixed binary, input, target, and deterministic compilation mode produce repeatable operation ordering. Multi-device reductions and atomics can introduce ordering differences unless deterministic collectives are enabled. Floating-point results can also differ across targets or compiler versions because tiling and fusion affect rounding.</p>
+    </section>
+
+    <section class="faq-item" id="binaries">
+      <h2>Can a Flow binary run on every FPU model?</h2>
+      <p>No. A <code>.flb</code> file is target-specific. Keep the original Python program or <code>.flm</code> package as the portable artifact and compile it for every deployment target. The runtime checks the target and tensor signature before launch.</p>
+    </section>
+
+    <section class="faq-item" id="errors">
+      <h2>How do I locate a failing operation?</h2>
+      <p>Start with <code>FLOW_SYNC=1</code> so errors are reported near the launching call. For numerical failures, enable <code>FLOW_CHECK_NUMERICS=1</code> and reproduce with a small input on the simulator. These options add synchronization or checks and should not remain enabled for production performance measurements.</p>
+    </section>
+
+    <section class="faq-item" id="support">
+      <h2>Where can I get help?</h2>
+      <p>Join our Discord community or contact us by email. The GonidonCloud community and support team are always ready to help.</p>
+      <ul>
+        <li><strong>Discord:</strong> <a href="https://discord.gg/REPLACE_ME" target="_blank" rel="noopener">GonidonCloud community server</a> — chat with other FPU users and our team.</li>
+        <li><strong>Email:</strong> <a href="mailto:support@gonidoncloud.com">support@gonidoncloud.com</a> — get direct help with setup, development, and deployment.</li>
+      </ul>
+      <p>For faster troubleshooting, include your FPU target and a minimal reproduction. You can also run <code>fputool doctor --output fpu-diagnostics.tar.gz</code> to collect diagnostics. Review all files for sensitive data before sharing them.</p>
+    </section>
+
+    <div class="pagination"><a href="performance.html">← Performance</a><a href="index.html">Overview →</a></div>
   </main>
 
-  <footer class="site-footer">
-    <!-- TODO: replace the href below with your marketing site URL -->
-    <a class="footer-home" href="https://www.gonidon.cloud/REPLACE_ME">
-      <span class="material-symbols-outlined">home</span>Go to home
-    </a>
-    <div class="footer-line">
-      GonidonCloud FPU Documentation — © 2026 GonidonCloud. All rights reserved.
-    </div>
-  </footer>
+  <footer class="site-footer"><a class="footer-home" href="https://www.gonidon.cloud/REPLACE_ME">GonidonCloud home <span aria-hidden="true">↗</span></a><div class="footer-line">FPU Documentation · © 2026 GonidonCloud. All rights reserved.</div></footer>
 </body>
 </html>

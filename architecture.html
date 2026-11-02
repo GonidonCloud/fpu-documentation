@@ -3,187 +3,213 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FPU Architecture | GonidonCloud Documentation</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500&family=Roboto:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet" />
+  <meta name="description" content="FPU hardware architecture: tensor engines, memory, numeric formats, FlowMesh, and device isolation." />
+  <title>FPU architecture | GonidonCloud Documentation</title>
   <link rel="stylesheet" href="styles.css" />
   <link rel="icon" type="image/png" href="logo.png" />
+  <script src="app.js" defer></script>
   <script src="theme.js" defer></script>
   <script src="search.js" defer></script>
 </head>
 <body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
   <header class="site-header">
-    <a class="logo" href="index.html">
-      <img src="logo.png" alt="GonidonCloud logo" class="logo-img" />
-      <span class="logo-company">GonidonCloud</span>
-      <span class="doc-tag">documentation</span>
+    <a class="logo" href="index.html" aria-label="GonidonCloud FPU documentation home">
+      <img src="logo.png" alt="" class="logo-img" />
+      <span class="logo-company">GonidonCloud</span><span class="doc-tag">FPU DOCS</span>
     </a>
     <div class="search-wrap">
-      <span class="material-symbols-outlined">search</span>
-      <input id="doc-search" type="search" placeholder="Search documentation" autocomplete="off" aria-label="Search documentation" />
-      <div id="search-results" class="search-results"></div>
+      <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m21 20-4.7-4.7m2.2-5.05a7.25 7.25 0 1 1-14.5 0 7.25 7.25 0 0 1 14.5 0Z"/></svg>
+      <input id="doc-search" type="search" placeholder="Search FPU docs" autocomplete="off" aria-label="Search documentation" aria-expanded="false" aria-controls="search-results" />
+      <kbd>/</kbd><div id="search-results" class="search-results" aria-label="Search results"></div>
     </div>
-    <nav class="main-nav">
-      <a href="index.html">Overview</a>
-      <a href="architecture.html" class="active">Architecture</a>
-      <a href="quickstart.html">Quickstart</a>
-      <a href="programming.html">Programming</a>
-      <a href="performance.html">Performance</a>
-      <a href="faq.html">FAQ</a>
+    <nav class="main-nav" aria-label="Documentation sections">
+      <a href="index.html">Overview</a><a href="architecture.html" class="active" aria-current="page">Architecture</a><a href="quickstart.html">Quickstart</a><a href="programming.html">Programming</a><a href="performance.html">Performance</a><a href="faq.html">FAQ</a>
     </nav>
-    <!-- TODO: replace the href below with your GitHub repository URL -->
     <a class="icon-btn github-btn" href="https://github.com/GonidonCloud/REPLACE_ME" target="_blank" rel="noopener" aria-label="GitHub repository" title="GitHub repository">
-      <svg class="github-icon" viewBox="0 0 16 16" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+      <svg class="github-icon" viewBox="0 0 16 16" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
     </a>
-    <button id="theme-toggle" class="icon-btn" aria-label="Switch theme">
-      <span class="material-symbols-outlined" id="theme-icon">dark_mode</span>
-    </button>
+    <button id="theme-toggle" class="icon-btn" aria-label="Switch theme" title="Switch theme"><span id="theme-icon" class="theme-icon" aria-hidden="true">◐</span></button>
   </header>
 
-  <main class="page">
-    <p class="breadcrumb">GonidonCloud Docs &gt; FPU &gt; Architecture</p>
-    <h1>FPU Architecture</h1>
-    <p class="subtitle">
-      How a Flow Processing Unit turns a pipeline description into continuously
-      flowing data.
-    </p>
+  <main id="main-content" class="page">
+    <p class="breadcrumb">Documentation <span>/</span> FPU <span>/</span> Architecture</p>
+    <p class="eyebrow">HARDWARE REFERENCE</p>
+    <h1>Inside an FPU</h1>
+    <p class="subtitle">How compiled tensor graphs map onto compute clusters, local memory, and a multi-device workgroup.</p>
 
-    <div class="toc">
+    <nav class="toc" aria-label="On this page">
       <strong>On this page</strong>
       <ol>
-        <li><a href="#topology">Chip topology</a></li>
-        <li><a href="#cores">Flow cores and stages</a></li>
-        <li><a href="#fabric">FlowFabric interconnect</a></li>
-        <li><a href="#memory">Flow memory hierarchy</a></li>
-        <li><a href="#backpressure">Backpressure and flow control</a></li>
+        <li><a href="#execution">Execution model</a></li>
+        <li><a href="#tensor-engine">Clusters and tensor engines</a></li>
+        <li><a href="#memory">Memory hierarchy</a></li>
+        <li><a href="#numerics">Numeric formats</a></li>
+        <li><a href="#interconnect">FlowMesh interconnect</a></li>
+        <li><a href="#isolation">Isolation and reliability</a></li>
       </ol>
+    </nav>
+
+    <h2 id="execution">Execution model</h2>
+    <p>
+      An FPU executes a <strong>compiled command stream</strong>, not a sequence of
+      individually dispatched framework operators. The Flow compiler analyzes the complete
+      graph, fuses compatible operations, divides tensors into tiles, and reserves memory
+      for inputs, outputs, and intermediates. The resulting Flow binary (<code>.flb</code>)
+      contains device code and a declarative resource plan.
+    </p>
+    <p>
+      At run time, the host writes argument descriptors and starts the program. A scalar
+      sequencer in each cluster issues work to its tensor engines and DMA engines. Because
+      dependencies are encoded in the command stream, independent compute and transfer
+      operations can proceed in parallel without further host involvement.
+    </p>
+    <div class="diagram-block">
+      <pre><code>Host application
+      │  arguments + launch
+      ▼
+FPU runtime ─────────────── asynchronous completion queue
+      │
+      ▼
+Compiled Flow binary
+      ├── cluster command streams
+      ├── tensor-engine microcode
+      ├── DMA schedule
+      └── memory and resource plan</code></pre>
+    </div>
+    <div class="callout">
+      <div class="callout-marker" aria-hidden="true">i</div>
+      <div class="callout-body"><div class="callout-title">Compilation is shape-aware</div>
+      Changing a tensor shape can change tiling, memory layout, or the number of devices
+      required. Compile a separate executable for each shape bucket used in production.</div>
     </div>
 
-    <h2 id="topology">Chip topology</h2>
+    <h2 id="tensor-engine">Clusters and tensor engines</h2>
     <p>
-      An FPU chip is a two-dimensional mesh of <strong>flow cores</strong>. Each core is
-      an independent dataflow engine with its own stage array, flow queues, and
-      fabric router. Cores never share a program counter — there is nothing to share.
-      The host system sees the FPU through a standard PCIe Gen5 endpoint or a
-      native FlowFabric port, depending on the enclosure.
+      A device is divided into <strong>compute clusters</strong>. The FPU M2 reference
+      configuration has four clusters, each containing two tensor engines, a scalar
+      sequencer, DMA engines, and a local SRAM partition. Clusters exchange tiles through
+      the on-chip crossbar; they do not share a cache-coherent view of local memory.
     </p>
-    <pre><code>┌────────────────────────────────────────────┐
-│                  FPU die                   │
-│  ┌────────┐ ┌────────┐ ┌────────┐ ┌──────┐ │   FC  = flow core
-│  │  FC 0  │ │  FC 1  │ │  FC 2  │ │ FC 3 │ │   FF  = FlowFabric router
-│  │ stages │ │ stages │ │ stages │ │stages│ │   FM  = flow memory tile
-│  └───FF───┘ └───FF───┘ └───FF───┘ └──FF──┘ │
-│  ┌────────┐ ┌────────┐ ┌────────┐ ┌──────┐ │
-│  │  FC 4  │ │  FC 5  │ │  FC 6  │ │ FC 7 │ │
-│  └───FF───┘ └───FF───┘ └───FF───┘ └──FF──┘ │
-│           FlowFabric mesh + FM tiles       │
-│  ┌──────────────────────────────────────┐  │
-│  │   Host interface (PCIe5 / FlowLink)  │  │
-│  └──────────────────────────────────────┘  │
-└────────────────────────────────────────────┘</code></pre>
+    <div class="diagram-block">
+      <pre><code>┌────────────────────────────── FPU M2 ──────────────────────────────┐
+│ ┌──────────── Cluster 0 ───────────┐ ┌──────────── Cluster 1 ─────┐ │
+│ │ Tensor engine 0  Tensor engine 1 │ │ Tensor engine 2  Engine 3   │ │
+│ │ Sequencer · DMA · 64 MB SRAM     │ │ Sequencer · DMA · 64 MB SRAM│ │
+│ └──────────────────────────────────┘ └─────────────────────────────┘ │
+│ ┌──────────── Cluster 2 ───────────┐ ┌──────────── Cluster 3 ─────┐ │
+│ │ Tensor engine 4  Tensor engine 5 │ │ Tensor engine 6  Engine 7   │ │
+│ │ Sequencer · DMA · 64 MB SRAM     │ │ Sequencer · DMA · 64 MB SRAM│ │
+│ └──────────────────────────────────┘ └─────────────────────────────┘ │
+│             On-chip crossbar · 96 GB HBM controllers                │
+│          Host DMA · FlowMesh ports · management processor           │
+└─────────────────────────────────────────────────────────────────────┘</code></pre>
+    </div>
+    <p>Each tensor engine combines three execution resources:</p>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>Resource</th><th>Work performed</th><th>Typical operations</th></tr></thead>
+        <tbody>
+          <tr><td>Matrix array</td><td>Dense products on two-dimensional tiles</td><td>Matmul, convolution, attention projections</td></tr>
+          <tr><td>Vector lanes</td><td>Elementwise and reduction work across tiles</td><td>Activation, normalization, softmax, cast</td></tr>
+          <tr><td>Scalar sequencer</td><td>Bounded control flow and address generation</td><td>Loop counters, descriptors, dependency checks</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      Tiling is primarily a compiler concern. A logical operation such as a 4096 × 4096
+      matrix multiplication is decomposed into smaller matrix operations whose operands
+      fit in cluster SRAM. The compiler chooses the tile dimensions and layout together;
+      changing only one can make an otherwise valid schedule inefficient.
+    </p>
 
-    <h2 id="cores">Flow cores and stages</h2>
+    <h2 id="memory">Memory hierarchy</h2>
     <p>
-      Each flow core contains up to <strong>256 reconfigurable stages</strong>. A stage is
-      the smallest unit of execution: a pipelined functional block that consumes
-      tokens from an input flow queue, applies a kernel, and emits tokens to one or
-      more output queues. Stages are grouped into <em>lanes</em>; a lane processes one
-      token stream in strict order, while lanes within a core run concurrently.
+      FPU memory is explicitly managed by compiled schedules. Values are copied between
+      levels by DMA engines; there is no assumption that a frequently used value will be
+      retained automatically. This makes capacity visible and transfer costs measurable.
     </p>
-    <p>Every stage has three binding parameters, fixed when the pipeline is placed:</p>
-    <table>
-      <thead>
-        <tr><th>Parameter</th><th>Description</th></tr>
-      </thead>
-      <tbody>
-        <tr><td><code>KERNEL_ID</code></td><td>Index into the core's kernel ROM / reconfigurable kernel memory.</td></tr>
-        <tr><td><code>QDEPTH</code></td><td>Depth of the stage's input queue (2–512 tokens).</td></tr>
-        <tr><td><code>UPSTREAM[]</code></td><td>List of fabric channels feeding this stage.</td></tr>
-      </tbody>
-    </table>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>Level</th><th>M2 reference size</th><th>Visibility</th><th>Primary role</th></tr></thead>
+        <tbody>
+          <tr><td>Engine registers</td><td>Allocated by the compiler</td><td>One tensor engine</td><td>Immediate matrix and vector operands</td></tr>
+          <tr><td>Cluster SRAM</td><td>64 MB per cluster</td><td>Engines in one cluster</td><td>Tiles, small weights, fusion intermediates</td></tr>
+          <tr><td>Device HBM</td><td>96 GB per device</td><td>All clusters on the device</td><td>Parameters, activations, optimizer state</td></tr>
+          <tr><td>Host memory</td><td>Set by the host system</td><td>Host and DMA engine</td><td>Datasets, checkpoints, application buffers</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h3>Buffers and lifetimes</h3>
+    <p>
+      FlowKit device arrays own HBM allocations until they are released. Within a compiled
+      program, the compiler can reuse an intermediate allocation as soon as its last
+      consumer finishes. Live values that do not fit must be spilled to HBM, recomputed,
+      or sharded across devices. The compiler reports peak memory by level so these choices
+      can be evaluated before execution.
+    </p>
 
-    <h2 id="fabric">FlowFabric interconnect</h2>
+    <h2 id="numerics">Numeric formats</h2>
     <p>
-      <strong>FlowFabric</strong> is the on-chip network that carries tokens between
-      stages, cores, and I/O ports. It is a credit-based, lossless network with
-      deterministic routing: once a pipeline is placed, the path of every flow is
-      known at compile time, which is what makes end-to-end latency on an FPU
-      predictable to the nanosecond.
+      Storage type and accumulation type are separate choices. Narrow storage reduces HBM
+      traffic and SRAM footprint; wider accumulation limits rounding error in reductions.
     </p>
-    <ul>
-      <li><strong>Per-hop latency:</strong> 18 ns (v2), including flow-control overhead.</li>
-      <li><strong>Bisection bandwidth:</strong> 3.2 Tbps on-chip (v2 die).</li>
-      <li><strong>External links:</strong> 4 × 400 Gbps FlowLink ports per device.</li>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>Input format</th><th>Accumulation</th><th>Availability</th><th>Recommended use</th></tr></thead>
+        <tbody>
+          <tr><td><code>float32</code></td><td><code>float32</code></td><td>All FPU targets</td><td>Reference results and precision-sensitive math</td></tr>
+          <tr><td><code>bfloat16</code></td><td><code>float32</code></td><td>All FPU targets</td><td>General training and inference</td></tr>
+          <tr><td><code>float16</code></td><td><code>float32</code></td><td>All FPU targets</td><td>Inference and scaled training</td></tr>
+          <tr><td><code>int8</code></td><td><code>int32</code></td><td>All FPU targets</td><td>Quantized matrix and convolution operations</td></tr>
+          <tr><td><code>int4</code></td><td><code>int32</code></td><td>E1, M2 inference profiles</td><td>Weight-only quantized inference</td></tr>
+          <tr><td><code>float8</code></td><td><code>float32</code></td><td>M4 preview</td><td>Experimental low-precision training</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      Quantized operations carry per-tensor or per-channel scales and zero points. The
+      compiler preserves these parameters through fusion where possible and inserts an
+      explicit conversion when a consumer requires a different format.
+    </p>
+
+    <h2 id="interconnect">FlowMesh interconnect</h2>
+    <p>
+      <strong>FlowMesh</strong> connects FPUs into a workgroup. Links can be arranged as a
+      ring or attached to a switched fabric. A workgroup has a logical topology used by the
+      compiler and runtime; physical cabling is discovered independently by the management
+      service.
+    </p>
+    <p>
+      Collective operations move activations, gradients, and parameters without staging
+      them in host memory. Common primitives include <code>all_sum</code>,
+      <code>all_gather</code>, <code>reduce_scatter</code>, and point-to-point
+      <code>send</code>/<code>recv</code>. The compiler can overlap a collective on one
+      partition with computation on another when their dependencies allow it.
+    </p>
+    <pre><code># Logical four-device axis used by a compiled program
+mesh = fk.Mesh(devices=[0, 1, 2, 3], axis="data")
+
+# Each device contributes a partial gradient; all receive the sum.
+global_gradient = fk.collectives.all_sum(local_gradient, mesh=mesh)</code></pre>
+
+    <h2 id="isolation">Isolation and reliability</h2>
+    <ul class="check-list">
+      <li><strong>Queue isolation.</strong> A runtime context can access only its assigned device queues and HBM allocations.</li>
+      <li><strong>Memory clearing.</strong> Allocations are cleared before ownership moves between contexts.</li>
+      <li><strong>Signed executables.</strong> Production devices can require signed Flow binaries and firmware.</li>
+      <li><strong>Health monitoring.</strong> Correctable memory events, link retries, and thermal state are exported through <code>fputool</code>.</li>
+      <li><strong>Job recovery.</strong> The runtime reports the failed device and collective epoch so an application can restore its most recent checkpoint.</li>
     </ul>
 
-    <h2 id="memory">Flow memory hierarchy</h2>
-    <p>
-      Unlike a cache-based processor, the FPU exposes managed memory explicitly:
-    </p>
-    <table>
-      <thead>
-        <tr><th>Level</th><th>Size (v2)</th><th>Latency</th><th>Scope</th></tr>
-      </thead>
-      <tbody>
-        <tr><td>Stage registers</td><td>64 KB / stage</td><td>1 cycle</td><td>Single stage</td></tr>
-        <tr><td>Flow memory tile</td><td>4 MB / tile</td><td>~9 cycles</td><td>Neighboring cores</td></tr>
-        <tr><td>Core scratchpad</td><td>32 MB / core</td><td>~35 cycles</td><td>One flow core</td></tr>
-        <tr><td>Device HBM</td><td>32 GB</td><td>~180 cycles</td><td>All cores</td></tr>
-      </tbody>
-    </table>
-    <p>
-      Flow memory tiles are the key to sustained throughput: state that would cause a
-      cache thrash on a CPU (routing tables, stream windows, feature stores) is
-      pinned into a tile and addressed by the stages that own it. There is no
-      coherence protocol to pay for, because ownership is static.
-    </p>
-
-    <div class="callout">
-      <span class="material-symbols-outlined callout-icon">info</span>
-      <div class="callout-body">
-        <div class="callout-title">Note</div>
-        Because ownership is static, the compiler rejects any pipeline where two
-        stages write to the same flow memory region. Use a
-        <code>reduce</code> stage to merge streams instead.
-      </div>
-    </div>
-
-    <h2 id="backpressure">Backpressure and flow control</h2>
-    <p>
-      The FPU is a push-based device: an upstream stage may only emit a token when it
-      holds a credit for the downstream queue. If a slow stage builds up, backpressure
-      propagates backward through the fabric to the source — the device never drops
-      or overwrites in-flight data. Correct pipelines therefore need to bound their
-      state: a stage that buffers an unbounded window will eventually stall its lane.
-    </p>
-    <pre><code>// A pipeline that cannot deadlock: window size is bounded.
-flow pkt_in  --&gt; window(4096) --> classify --&gt; sink(out_stream);</code></pre>
-
-    <h2 id="security">Security model</h2>
-    <p>
-      Pipelines are isolated at placement time. Each loaded pipeline gets a
-      <em>flow namespace</em>: a set of fabric channels, memory regions, and I/O
-      ports it may touch. The fabric router drops — and logs — any token that leaves
-      its namespace. Bitstreams are signed with GonidonCloud device keys, and the
-      host driver verifies signatures before placement.
-    </p>
-
     <div class="pagination">
-      <a href="index.html">← Overview</a>
-      <a href="quickstart.html">Quickstart →</a>
+      <a href="index.html">← Overview</a><a href="quickstart.html">Quickstart →</a>
     </div>
   </main>
 
   <footer class="site-footer">
-    <!-- TODO: replace the href below with your marketing site URL -->
-    <a class="footer-home" href="https://www.gonidon.cloud/REPLACE_ME">
-      <span class="material-symbols-outlined">home</span>Go to home
-    </a>
-    <div class="footer-line">
-      GonidonCloud FPU Documentation — © 2026 GonidonCloud. All rights reserved.
-    </div>
+    <a class="footer-home" href="https://www.gonidon.cloud/REPLACE_ME">GonidonCloud home <span aria-hidden="true">↗</span></a>
+    <div class="footer-line">FPU Documentation · © 2026 GonidonCloud. All rights reserved.</div>
   </footer>
 </body>
 </html>

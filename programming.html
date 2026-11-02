@@ -3,194 +3,214 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Programming the FPU | GonidonCloud Documentation</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500&family=Roboto:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet" />
+  <meta name="description" content="Build FPU programs with FlowKit: graph compilation, tensor shapes, precision, sharding, collectives, and model import." />
+  <title>Programming FPU | GonidonCloud Documentation</title>
   <link rel="stylesheet" href="styles.css" />
   <link rel="icon" type="image/png" href="logo.png" />
+  <script src="app.js" defer></script>
   <script src="theme.js" defer></script>
   <script src="search.js" defer></script>
 </head>
 <body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
   <header class="site-header">
-    <a class="logo" href="index.html">
-      <img src="logo.png" alt="GonidonCloud logo" class="logo-img" />
-      <span class="logo-company">GonidonCloud</span>
-      <span class="doc-tag">documentation</span>
-    </a>
-    <div class="search-wrap">
-      <span class="material-symbols-outlined">search</span>
-      <input id="doc-search" type="search" placeholder="Search documentation" autocomplete="off" aria-label="Search documentation" />
-      <div id="search-results" class="search-results"></div>
-    </div>
-    <nav class="main-nav">
-      <a href="index.html">Overview</a>
-      <a href="architecture.html">Architecture</a>
-      <a href="quickstart.html">Quickstart</a>
-      <a href="programming.html" class="active">Programming</a>
-      <a href="performance.html">Performance</a>
-      <a href="faq.html">FAQ</a>
-    </nav>
-    <!-- TODO: replace the href below with your GitHub repository URL -->
-    <a class="icon-btn github-btn" href="https://github.com/GonidonCloud/REPLACE_ME" target="_blank" rel="noopener" aria-label="GitHub repository" title="GitHub repository">
-      <svg class="github-icon" viewBox="0 0 16 16" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
-    </a>
-    <button id="theme-toggle" class="icon-btn" aria-label="Switch theme">
-      <span class="material-symbols-outlined" id="theme-icon">dark_mode</span>
-    </button>
+    <a class="logo" href="index.html" aria-label="GonidonCloud FPU documentation home"><img src="logo.png" alt="" class="logo-img" /><span class="logo-company">GonidonCloud</span><span class="doc-tag">FPU DOCS</span></a>
+    <div class="search-wrap"><svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m21 20-4.7-4.7m2.2-5.05a7.25 7.25 0 1 1-14.5 0 7.25 7.25 0 0 1 14.5 0Z"/></svg><input id="doc-search" type="search" placeholder="Search FPU docs" autocomplete="off" aria-label="Search documentation" aria-expanded="false" aria-controls="search-results" /><kbd>/</kbd><div id="search-results" class="search-results" aria-label="Search results"></div></div>
+    <nav class="main-nav" aria-label="Documentation sections"><a href="index.html">Overview</a><a href="architecture.html">Architecture</a><a href="quickstart.html">Quickstart</a><a href="programming.html" class="active" aria-current="page">Programming</a><a href="performance.html">Performance</a><a href="faq.html">FAQ</a></nav>
+    <a class="icon-btn github-btn" href="https://github.com/GonidonCloud/REPLACE_ME" target="_blank" rel="noopener" aria-label="GitHub repository" title="GitHub repository"><svg class="github-icon" viewBox="0 0 16 16" width="20" height="20" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.28.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg></a>
+    <button id="theme-toggle" class="icon-btn" aria-label="Switch theme" title="Switch theme"><span id="theme-icon" class="theme-icon" aria-hidden="true">◐</span></button>
   </header>
 
-  <main class="page">
-    <p class="breadcrumb">GonidonCloud Docs &gt; FPU &gt; Programming</p>
-    <h1>Programming with FlowLang</h1>
-    <p class="subtitle">
-      The FPU's programming model: pipelines, stages, kernels, and the host runtime.
-    </p>
+  <main id="main-content" class="page">
+    <p class="breadcrumb">Documentation <span>/</span> FPU <span>/</span> Programming</p>
+    <p class="eyebrow">FLOWKIT GUIDE</p>
+    <h1>Programming with FlowKit</h1>
+    <p class="subtitle">Capture tensor computations, control their compiled representation, and execute them across one or more FPUs.</p>
 
-    <div class="toc">
+    <nav class="toc" aria-label="On this page">
       <strong>On this page</strong>
       <ol>
-        <li><a href="#model">The programming model</a></li>
-        <li><a href="#flowlang">FlowLang basics</a></li>
-        <li><a href="#kernels">Kernels</a></li>
-        <li><a href="#runtime">Host runtime API</a></li>
-        <li><a href="#placement">Placement and constraints</a></li>
+        <li><a href="#model">Programs and device arrays</a></li>
+        <li><a href="#compilation">Graph compilation</a></li>
+        <li><a href="#shapes">Shapes and layouts</a></li>
+        <li><a href="#precision">Precision control</a></li>
+        <li><a href="#parallel">Multi-device programs</a></li>
+        <li><a href="#import">Importing a model</a></li>
+        <li><a href="#debugging">Debugging</a></li>
       </ol>
-    </div>
+    </nav>
 
-    <h2 id="model">The programming model</h2>
+    <h2 id="model">Programs and device arrays</h2>
     <p>
-      Programs for the FPU are <em>pipelines</em>: directed graphs of stages whose data
-      dependencies are known before the program runs. You describe
-      <strong>what</strong> each stage does; the toolchain decides <strong>where</strong>
-      and <strong>when</strong> it executes. This division is why FPU programs have no
-      data races by construction — two stages never run "simultaneously" in a way
-      that touches the same token.
+      FlowKit separates a computation's <strong>definition</strong> from its
+      <strong>execution</strong>. Python functions built from <code>fk</code> operations
+      describe a tensor graph. Compiling that graph returns a callable program with fixed
+      argument contracts. Device arrays represent typed storage on an FPU and can pass
+      between compiled programs without a host copy.
     </p>
-
-    <h2 id="flowlang">FlowLang basics</h2>
-    <p>
-      FlowLang is GonidonCloud's pipeline description language. A program is a list of
-      stage declarations and wiring rules:
-    </p>
-    <pre><code>// declare reusable stage templates
-stage map upper      { kernel = "utf8_upper"; }
-stage filter drop    { kernel = "predicate_drop"; predicate = f.score &lt; 0.5; }
-stage window w(4096) { kernel = "ringbuffer_win"; }
-stage reduce count   { kernel = "count64"; }
-
-// wire them into a top-level flow named "enrich"
-flow enrich {
-  source feed_in
-    --&gt; upper
-    --&gt; drop
-    --&gt; w
-    --&gt; count
-    --&gt; sink feature_out;
-}</code></pre>
-    <p>Language elements at a glance:</p>
-    <table>
-      <thead>
-        <tr><th>Element</th><th>Purpose</th></tr>
-      </thead>
-      <tbody>
-        <tr><td><code>source</code> / <code>sink</code></td><td>Typed boundaries: host memory, FlowLink ports, files, or sockets.</td></tr>
-        <tr><td><code>map</code>, <code>filter</code>, <code>window</code>, <code>reduce</code>, <code>tee</code></td><td>Stage templates covering the common streaming patterns.</td></tr>
-        <tr><td><code>kernel</code></td><td>The executable body of a stage (see below).</td></tr>
-        <tr><td><code>branch N</code></td><td>Named output of a multi-output stage such as <code>tee</code>.</td></tr>
-      </tbody>
-    </table>
-
-    <h2 id="kernels">Kernels</h2>
-    <p>
-      A kernel is the actual computation inside a stage. Most pipelines use kernels
-      from the <strong>standard kernel library</strong> (over 400 kernels: parsing,
-      math, hashing, codecs, ML feature transforms). For custom logic, write kernels
-      in <strong>GDK-C</strong>, a strictly bounded C subset:
-    </p>
-    <pre><code>// Kernel: saturating 16-bit FIR filter, fixed taps.
-kernel fir16(input tok : s16x8, output out : s16x8) {
-  state s16 coeffs[8] = { 3, 7, 15, 31, 31, 15, 7, 3 };  // placed in flow memory
-  s32 acc = 0;
-  for (i in 0..8) {
-    acc = sat_add32(acc, coeffs[i] * tok.lane[i]);
-  }
-  out.lane = saturate_s16x8(acc &gt;&gt; 6);
-  emit out;
-}</code></pre>
-    <p>GDK-C guarantees:</p>
-    <ul>
-      <li><strong>Bounded loops</strong> — every loop trip count is known at compile time; there are no data-dependent hangs on silicon.</li>
-      <li><strong>No pointers outside namespace</strong> — memory access is checked against the stage's assigned regions.</li>
-      <li><strong>Deterministic latency</strong> — the compiler reports worst-case cycles per token.</li>
+    <ul class="check-list">
+      <li>Host NumPy arrays are copied explicitly with <code>fk.to_device</code>.</li>
+      <li>Device arrays are immutable from the program author's perspective; an operation returns a new logical value.</li>
+      <li>Launches are asynchronous. Retrieval or <code>block_until_ready()</code> establishes a synchronization point.</li>
+      <li>A compiled program can be saved as a <code>.flb</code> file and loaded by another process using the same target.</li>
     </ul>
 
-    <div class="callout">
-      <span class="material-symbols-outlined callout-icon">info</span>
-      <div class="callout-body">
-        <div class="callout-title">Note</div>
-        If you can express your transform in the standard library, prefer it. Library
-        kernels are hand-pipelined and typically 20–40% faster than first-draft GDK-C.
-      </div>
+    <h2 id="compilation">Graph compilation</h2>
+    <p>This example compiles a linear layer followed by a bias addition and ReLU:</p>
+    <pre><code>import flowkit as fk
+
+def linear_relu(x, weights, bias):
+    hidden = fk.matmul(x, weights)
+    return fk.relu(hidden + bias)
+
+program = fk.compile(
+    linear_relu,
+    x=fk.TensorSpec((64, 768), "bfloat16"),
+    weights=fk.TensorSpec((768, 3072), "bfloat16"),
+    bias=fk.TensorSpec((3072,), "bfloat16"),
+)
+
+x = fk.to_device(input_batch, dtype="bfloat16")
+weights = fk.to_device(model_weights, dtype="bfloat16")
+bias = fk.to_device(model_bias, dtype="bfloat16")
+output = program(x, weights, bias)</code></pre>
+    <p>
+      The compiler can fuse the bias addition and activation with the matrix operation's
+      output path, avoiding a round trip to HBM for each intermediate. Fusion decisions
+      depend on target, shape, and data type; do not encode application behavior around a
+      particular fusion choice.
+    </p>
+    <h3>Inspecting the compiled artifact</h3>
+    <pre><code>print(program.signature)
+print(program.resource_report)
+
+program.save("linear_relu.flb")</code></pre>
+    <p>
+      The resource report lists HBM and SRAM high-water marks, assigned clusters, collective
+      operations, and any unsupported operations left for the host. The standalone
+      <code>flowc explain linear_relu.flb</code> command prints the same information without
+      loading the runtime.
+    </p>
+
+    <h2 id="shapes">Shapes and layouts</h2>
+    <p>
+      A <code>TensorSpec</code> defines rank, dimension sizes, and storage type. Static
+      shapes give the compiler the most scheduling freedom. For variable input sizes,
+      compile a bounded set of shape buckets and pad each input to the nearest bucket.
+    </p>
+    <pre><code>programs = {}
+for batch in (1, 8, 32, 64):
+    programs[batch] = fk.compile(
+        linear_relu,
+        x=fk.TensorSpec((batch, 768), "bfloat16"),
+        weights=fk.TensorSpec((768, 3072), "bfloat16"),
+        bias=fk.TensorSpec((3072,), "bfloat16"),
+    )
+
+# Application code selects a bucket and tracks the valid input rows.
+executable = programs[8]
+result = executable(padded_x, weights, bias)</code></pre>
+    <p>
+      Padding should not change the requested result. Mask padded rows before reductions
+      such as mean or softmax when they would otherwise contribute to the output.
+    </p>
+    <h3>Logical shape versus physical layout</h3>
+    <p>
+      Program code uses logical row-major tensor shapes. The compiler may store tiles in a
+      different physical order to match the matrix array. Layout annotations in a Flow
+      binary describe this representation; explicit layout choices are needed only for
+      custom operators or foreign-memory interfaces.
+    </p>
+
+    <h2 id="precision">Precision control</h2>
+    <p>
+      FlowKit preserves the dtypes in the captured graph unless compilation options request
+      a conversion. Use explicit casts at model boundaries and choose accumulation behavior
+      for matrix operations independently of storage type.
+    </p>
+    <pre><code>options = fk.CompileOptions(
+    matmul_dtype="bfloat16",
+    accumulator_dtype="float32",
+    allow_precision_change=["matmul"],
+)
+
+program = fk.compile(
+    linear_relu,
+    options=options,
+    x=fk.TensorSpec((64, 768), "float32"),
+    weights=fk.TensorSpec((768, 3072), "float32"),
+    bias=fk.TensorSpec((3072,), "float32"),
+)</code></pre>
+    <p>
+      Narrow matrix inputs can improve throughput and reduce memory traffic, but outputs
+      will not be bit-identical to a float32 reference. Validate task-specific accuracy
+      across a representative dataset. For quantized models, retain calibration scales in
+      the FlowModel package so they survive compilation and deployment.
+    </p>
+
+    <h2 id="parallel">Multi-device programs</h2>
+    <p>
+      A <strong>mesh</strong> names a logical set of devices. Sharding rules map tensor
+      dimensions to mesh axes, while collective operations define how partial results are
+      combined. The compiler uses both to produce per-device command streams.
+    </p>
+    <pre><code>mesh = fk.Mesh(devices=[0, 1, 2, 3], axis="data")
+
+# Split the batch dimension; every device keeps a full weight copy.
+x_sharded = fk.shard(x, axis=0, mesh=mesh)
+
+# Sum partial gradients and return the result on every participating device.
+gradients = fk.collectives.all_sum(local_gradients, mesh=mesh)</code></pre>
+    <h3>Choosing a parallel strategy</h3>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>Strategy</th><th>What is partitioned</th><th>Main communication</th></tr></thead>
+        <tbody>
+          <tr><td>Data parallel</td><td>Examples in a batch</td><td>Gradient sum or mean</td></tr>
+          <tr><td>Tensor parallel</td><td>Matrix rows or columns</td><td>Activation gather or reduction</td></tr>
+          <tr><td>Pipeline parallel</td><td>Contiguous model stages</td><td>Point-to-point activation transfer</td></tr>
+        </tbody>
+      </table>
     </div>
-
-    <h2 id="runtime">Host runtime API</h2>
     <p>
-      Pipelines are driven from the host with <code>fpu-python</code>, the primary
-      runtime binding (C and Rust bindings ship alongside):
-    </p>
-    <pre><code>import fpu
-
-dev = fpu.open(device=0)
-
-pipeline = fpu.load_bitstream("enrich.gbit", device=dev)
-feed     = pipeline.source("feed_in",  buffer_size=1 &lt;&lt; 20)
-take     = pipeline.sink("feature_out")
-
-pipeline.run()          # non-blocking; hardware starts flowing
-
-feed.stream(my_data)    # push tokens
-out = take.drain()      # pull results
-
-pipeline.stop()
-fpu.close(dev)</code></pre>
-    <p>The runtime never copies data across the PCIe boundary unless the pipeline
-    requests it — tokens enter device HBM via direct DMA descriptors.</p>
-
-    <h2 id="placement">Placement and constraints</h2>
-    <p>
-      The <strong>placer</strong> assigns stages to cores and flows to fabric channels.
-      It optimizes for routability first, then hop count on the critical path. For
-      latency-sensitive pipelines you can pin stages manually:
-    </p>
-    <pre><code>constraints {
-  place upper on core 0;
-  place w     on core 1, lane 3;
-  flow feed_in route min_hop;
-  locate sink feature_out at port FlowLink[1];
-}</code></pre>
-    <p>
-      Verify any placement with <code>fputool visualize enrich.gbit</code>, which
-      renders the mapped pipeline as an SVG annotated with hop counts and queue
-      depths.
+      Strategies can be combined on different mesh axes. Start with data parallelism for
+      models that fit on one device; introduce tensor or pipeline partitioning when
+      capacity or matrix efficiency requires it.
     </p>
 
-    <div class="pagination">
-      <a href="quickstart.html">← Quickstart</a>
-      <a href="performance.html">Performance →</a>
-    </div>
+    <h2 id="import">Importing a model</h2>
+    <p>
+      A <strong>FlowModel</strong> package (<code>.flm</code>) contains a portable graph,
+      weights, tensor metadata, and optional quantization parameters. Import a supported
+      ONNX graph, inspect operator coverage, and then compile the package for each target:
+    </p>
+    <pre><code>flowc import model.onnx --output model.flm
+flowc operators model.flm --unsupported
+flowc compile model.flm --target fpu-m2 --output model.flb</code></pre>
+    <p>Deploy the resulting binary through the same runtime API as a Python-compiled program:</p>
+    <pre><code>import flowkit as fk
+
+classifier = fk.load("model.flb")
+logits = classifier(fk.to_device(batch, dtype="bfloat16"))
+logits.block_until_ready()</code></pre>
+    <p>
+      Unsupported operators must be replaced, implemented as an extension, or moved into a
+      preprocessing or postprocessing stage on the host. An import succeeds only when the
+      complete graph has an explicit execution plan.
+    </p>
+
+    <h2 id="debugging">Debugging</h2>
+    <ul>
+      <li>Run a small static-shape case with <code>FLOW_TARGET=sim</code> and compare against a host reference.</li>
+      <li>Set <code>FLOW_SYNC=1</code> to surface a launch error at the calling operation during development.</li>
+      <li>Use <code>fk.debug.print(value)</code> inside a captured function to emit selected device values at synchronization points.</li>
+      <li>Set <code>FLOW_CHECK_NUMERICS=1</code> to insert NaN and infinity checks around operation boundaries.</li>
+      <li>Disable optional fusion with <code>fk.CompileOptions(fusion=False)</code> only to isolate a suspected compiler issue; restore it for production benchmarks.</li>
+    </ul>
+
+    <div class="pagination"><a href="quickstart.html">← Quickstart</a><a href="performance.html">Performance →</a></div>
   </main>
 
-  <footer class="site-footer">
-    <!-- TODO: replace the href below with your marketing site URL -->
-    <a class="footer-home" href="https://www.gonidon.cloud/REPLACE_ME">
-      <span class="material-symbols-outlined">home</span>Go to home
-    </a>
-    <div class="footer-line">
-      GonidonCloud FPU Documentation — © 2026 GonidonCloud. All rights reserved.
-    </div>
-  </footer>
+  <footer class="site-footer"><a class="footer-home" href="https://www.gonidon.cloud/REPLACE_ME">GonidonCloud home <span aria-hidden="true">↗</span></a><div class="footer-line">FPU Documentation · © 2026 GonidonCloud. All rights reserved.</div></footer>
 </body>
 </html>
